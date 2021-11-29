@@ -73,7 +73,7 @@ const Game: React.FC = () => {
       // Game over or square already handled
       return;
     }
-    computeMove(nextPlayer, squareId);
+    computeMove(squareId);
   };
 
   const renderStatusMessage = () => {
