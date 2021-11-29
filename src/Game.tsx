@@ -1,6 +1,6 @@
 import useGameState from "./useGameState";
 
-function calculateWinner(squares : any) {
+function calculateWinner(squares: any) {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -20,7 +20,7 @@ function calculateWinner(squares : any) {
   return null;
 }
 
-function Square({ id, value, onClick } : any) {
+function Square({ id, value, onClick }: any) {
   return (
     <button data-testid={`square-${id}`} className="square" onClick={onClick}>
       {value}
@@ -28,7 +28,7 @@ function Square({ id, value, onClick } : any) {
   );
 }
 
-const Board = ({ squares, onSquareClick } : any) => {
+const Board = ({ squares, onSquareClick }: any) => {
   const renderSquare = (squareId: number) => {
     return (
       <Square
@@ -61,12 +61,8 @@ const Board = ({ squares, onSquareClick } : any) => {
 };
 
 const Game: React.FC = () => {
-  const {
-    currentBoard,
-    stepNumber,
-    nextPlayer,
-    computeMove
-  } = useGameState();
+  const { currentBoard, stepNumber, nextPlayer, computeMove, restartGame } =
+    useGameState();
 
   const handleSquareClick = (squareId: number) => {
     if (calculateWinner(currentBoard) || currentBoard[squareId]) {
@@ -76,14 +72,15 @@ const Game: React.FC = () => {
     computeMove(squareId);
   };
 
+  const hasWinner = calculateWinner(currentBoard);
+
   const renderStatusMessage = () => {
-    const winner = calculateWinner(currentBoard);
-    if (winner) {
-      return "Winner: " + winner;
+    if (hasWinner) {
+      return "Winner: " + hasWinner;
     } else if (stepNumber === 9) {
       return "Draw: Game over";
     } else {
-      return "Next player: " + (nextPlayer === 'X' ? "❌" : "⭕");
+      return "Next player: " + (nextPlayer === "X" ? "❌" : "⭕");
     }
   };
 
@@ -102,6 +99,9 @@ const Game: React.FC = () => {
         <div className="game-info">
           <div>Current step: {stepNumber}</div>
           <div>{renderStatusMessage()}</div>
+          {(hasWinner || stepNumber === 9) && (
+            <button onClick={restartGame}>Restart game</button>
+          )}
         </div>
       </div>
     </>
