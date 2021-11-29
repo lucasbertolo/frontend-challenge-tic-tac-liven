@@ -3,13 +3,12 @@
  */
 
 import { useState } from "react";
-
-type Player = "X" | "O";
+import { Board, Player } from "./types.d";
 
 const useGameState = () => {
   const [stepNumber, setStepNumber] = useState(0);
   const [nextPlayer, setNextPlayer] = useState<Player>("X");
-  const [currentBoard, setCurrentBoard] = useState(Array(9).fill(null));
+  const [currentBoard, setCurrentBoard] = useState<Board>(Array(9).fill(null));
   const [lastGameInitialPlayer, setLastGameInitialPlayer] =
     useState<Player>("X");
 

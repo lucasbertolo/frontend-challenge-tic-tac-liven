@@ -1,6 +1,7 @@
 import useGameState from "./useGameState";
+import { Board, Square, BoardWrapper } from "./types.d";
 
-function calculateWinner(squares: any) {
+function calculateWinner(squares: Board) {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -11,16 +12,18 @@ function calculateWinner(squares: any) {
     [0, 4, 8],
     [2, 4, 6]
   ];
+
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
       return squares[a];
     }
   }
+
   return null;
 }
 
-function Square({ id, value, onClick }: any) {
+function Square({ id, value, onClick }: Square) {
   return (
     <button data-testid={`square-${id}`} className="square" onClick={onClick}>
       {value}
@@ -28,7 +31,7 @@ function Square({ id, value, onClick }: any) {
   );
 }
 
-const Board = ({ squares, onSquareClick }: any) => {
+const Board = ({ squares, onSquareClick }: BoardWrapper) => {
   const renderSquare = (squareId: number) => {
     return (
       <Square
@@ -73,15 +76,18 @@ const Game: React.FC = () => {
   };
 
   const hasWinner = calculateWinner(currentBoard);
+  const noMoreMoves = stepNumber === 9;
 
   const renderStatusMessage = () => {
     if (hasWinner) {
       return "Winner: " + hasWinner;
-    } else if (stepNumber === 9) {
-      return "Draw: Game over";
-    } else {
-      return "Next player: " + (nextPlayer === "X" ? "❌" : "⭕");
     }
+
+    if (noMoreMoves) {
+      return "Draw: Game over";
+    }
+
+    return "Next player: " + (nextPlayer === "X" ? "❌" : "⭕");
   };
 
   return (
@@ -99,7 +105,7 @@ const Game: React.FC = () => {
         <div className="game-info">
           <div>Current step: {stepNumber}</div>
           <div>{renderStatusMessage()}</div>
-          {(hasWinner || stepNumber === 9) && (
+          {(hasWinner || noMoreMoves) && (
             <button onClick={restartGame}>Restart game</button>
           )}
         </div>
