@@ -1,4 +1,4 @@
-export type Square = {
+export type SquareWrapper = {
   id: number;
   value: string | null;
   onClick: () => void;

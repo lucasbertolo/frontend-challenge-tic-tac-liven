@@ -1,5 +1,5 @@
 import useGameState from "./useGameState";
-import { Board, Square, BoardWrapper } from "./types.d";
+import { Board, SquareWrapper, BoardWrapper } from "./types.d";
 
 function calculateWinner(squares: Board) {
   const lines = [
@@ -23,7 +23,7 @@ function calculateWinner(squares: Board) {
   return null;
 }
 
-function Square({ id, value, onClick }: Square) {
+function Square({ id, value, onClick }: SquareWrapper) {
   return (
     <button data-testid={`square-${id}`} className="square" onClick={onClick}>
       {value}
@@ -31,7 +31,7 @@ function Square({ id, value, onClick }: Square) {
   );
 }
 
-const Board = ({ squares, onSquareClick }: BoardWrapper) => {
+const BoardDisplay = ({ squares, onSquareClick }: BoardWrapper) => {
   const renderSquare = (squareId: number) => {
     return (
       <Square
@@ -75,12 +75,12 @@ const Game: React.FC = () => {
     computeMove(squareId);
   };
 
-  const hasWinner = calculateWinner(currentBoard);
+  const winner = calculateWinner(currentBoard);
   const noMoreMoves = stepNumber === 9;
 
   const renderStatusMessage = () => {
-    if (hasWinner) {
-      return "Winner: " + hasWinner;
+    if (winner) {
+      return "Winner: " + winner;
     }
 
     if (noMoreMoves) {
@@ -100,12 +100,15 @@ const Game: React.FC = () => {
       </h1>
       <div className="game">
         <div className="game-board">
-          <Board squares={currentBoard} onSquareClick={handleSquareClick} />
+          <BoardDisplay
+            squares={currentBoard}
+            onSquareClick={handleSquareClick}
+          />
         </div>
         <div className="game-info">
           <div>Current step: {stepNumber}</div>
           <div>{renderStatusMessage()}</div>
-          {(hasWinner || noMoreMoves) && (
+          {(winner || noMoreMoves) && (
             <button onClick={restartGame}>Restart game</button>
           )}
         </div>
